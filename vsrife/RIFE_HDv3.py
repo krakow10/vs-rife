@@ -14,7 +14,8 @@ class Model:
         # self.vgg = VGGPerceptualLoss().to(device)
         self.sobel = SOBEL(device)
         if local_rank != -1:
-            self.flownet = DDP(self.flownet, device_ids=[local_rank], output_device=local_rank)
+            with torch.cuda.amp.autocast():
+                self.flownet = DDP(self.flownet, device_ids=[local_rank], output_device=local_rank)
 
     def train(self):
         self.flownet.train()
